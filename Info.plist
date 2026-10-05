@@ -13,13 +13,15 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>«PROJECTNAME»</string>
+	<string>Avro Keyboard</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>10001</string>
 	<key>InputMethodConnectionName</key>
 	<string>Avro_Keyboard_Connection</string>
 	<key>InputMethodServerControllerClass</key>

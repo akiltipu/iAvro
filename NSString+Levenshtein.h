@@ -1,16 +1,12 @@
-//
-//  NSString+Levenshtein.h
-//  Levenshtein
-//
-//  Created by Stefano Pigozzi on 8/20/09.
-//  Copyright 2009 Stefano Pigozzi. All rights reserved.
-//
+// SPDX-License-Identifier: MPL-1.1
+// Copyright (c) 2026 AkilTipu.
+// Community implementation; see MODIFICATIONS.md and LICENSES/MPL-1.1.txt.
 
-#import <Cocoa/Cocoa.h>
-
+#import <Foundation/Foundation.h>
 
 @interface NSString (Levenshtein)
 
--(int) computeLevenshteinDistanceWithString:(NSString *) string;
+// Preserve the existing API, UTF-16 comparison and -1 for empty inputs.
+- (int)computeLevenshteinDistanceWithString:(NSString *)string;
 
 @end

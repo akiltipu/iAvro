@@ -1,62 +1,43 @@
-//
-//  NSString+Levenshtein.m
-//  Levenshtein
-//
-//  Created by Stefano Pigozzi on 8/20/09.
-//  Copyright 2009 Stefano Pigozzi. All rights reserved.
-//
+// SPDX-License-Identifier: MPL-1.1
+// Copyright (c) 2026 AkilTipu.
+// Independently written community implementation of unit-cost edit distance.
+// See MODIFICATIONS.md and LICENSES/MPL-1.1.txt.
 
 #import "NSString+Levenshtein.h"
+#include <limits.h>
 #include <stdlib.h>
 
 @implementation NSString (Levenshtein)
 
-/// minimum between three values
-int minimum(int a,int b,int c)
-{
-	int min=a;
-	if(b<min)
-		min=b;
-	if(c<min)
-		min=c;
-	return min;
+- (int)computeLevenshteinDistanceWithString:(NSString *)string {
+    NSUInteger leftLength = [self length];
+    NSUInteger rightLength = [string length];
+    if (!leftLength || !rightLength || leftLength >= INT_MAX || rightLength >= INT_MAX) {
+        return -1;
+    }
+
+    // Retain one row of the dynamic program and the previous diagonal value.
+    int *row = malloc((rightLength + 1) * sizeof(*row));
+    if (!row) return -1;
+    for (NSUInteger column = 0; column <= rightLength; column++) row[column] = (int)column;
+
+    for (NSUInteger line = 1; line <= leftLength; line++) {
+        int diagonal = row[0];
+        row[0] = (int)line;
+        unichar character = [self characterAtIndex:line - 1];
+        for (NSUInteger column = 1; column <= rightLength; column++) {
+            int above = row[column];
+            int substitution = diagonal + (character != [string characterAtIndex:column - 1]);
+            int insertion = row[column - 1] + 1;
+            int deletion = above + 1;
+            row[column] = MIN(substitution, MIN(insertion, deletion));
+            diagonal = above;
+        }
+    }
+
+    int result = row[rightLength];
+    free(row);
+    return result;
 }
-
-
--(int) computeLevenshteinDistanceWithString:(NSString *) string
-{
-	int *d; // distance vector
-	int i,j,k; // indexes
-	int cost, distance;
-	
-	int n = [self length];
-	int m = [string length];
-	
-	if( n!=0 && m!=0 ){
-		
-		d = malloc( sizeof(int) * (++n) * (++m) );
-		
-		for( k=0 ; k<n ; k++ )
-			d[k] = k;
-		for( k=0 ; k<m ; k++ )
-			d[k*n] = k;
-		
-		for( i=1; i<n ; i++ ) {
-			for( j=1 ;j<m ; j++ ) {
-				if( [self characterAtIndex:i-1]  == [string characterAtIndex:j-1])
-					cost = 0;
-				else
-					cost = 1;
-				d[j*n+i]=minimum(d[(j-1)*n+i]+1,d[j*n+i-1]+1,d[(j-1)*n+i-1]+cost);
-			}
-		}
-		distance = d[n*m-1];
-		free(d);
-		return distance;
-	}
-	
-	return -1; // error
-}
-
 
 @end
