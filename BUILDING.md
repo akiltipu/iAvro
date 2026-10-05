@@ -85,7 +85,7 @@ floor requires separate SDK/API checks and runtime testing on that OS.
 | AvroParser, RegexParser, AutoCorrect, Database, Suggestion, CacheManager | In-tree Objective-C and original bundled data | Native build; focused parser/resource tests |
 | RegexKitLite | In-tree C/Objective-C, system `libicucore` | Native build and real regex match |
 | FMDB | In-tree Objective-C, system `libsqlite3` | Native build, dictionary integrity and lookup |
-| NSString+Levenshtein | In-tree Objective-C | Native build; no separate behavior coverage |
+| NSString+Levenshtein | Independent in-tree Objective-C replacement, MPL 1.1 | 400 baseline pairs, nil input and eight dictionary rankings |
 | Cocoa, Foundation, InputMethodKit, AppKit, CoreFoundation, ICU, SQLite, libobjc, libSystem | Apple system frameworks/libraries | All nine direct loaded headers are ARM64 on tested host |
 
 No bundled static library, external framework, vendored Intel binary or
@@ -108,3 +108,24 @@ diagnostic logs for seven days. It uses no signing secrets or
 `pull_request_target` and uploads no app bundle. Remote CI is **NOT RUN** until
 the changes are committed/pushed with the owner's authorization. Its isolated
 checks do not test InputMethodKit registration or interactive typing.
+
+## Experimental release packaging
+
+Release now enables hardened runtime and suppresses injected debugging
+entitlements. Debug retains its development settings. The package remains
+ad-hoc signed and unnotarized because no Developer ID identity is configured.
+The new metadata identifies version 1.0.0, build 10001; the proposed first
+prerelease tag is `v1.0.0-community.1`. No deployment setting was changed.
+
+From a **clean checkout**, run:
+
+```sh
+./scripts/package.sh
+```
+
+It creates a fresh external output directory, runs the Release checks, refuses
+`get-task-allow`, checks hardened runtime, packages the app with installation
+instructions/licenses/notices, exports matching source and writes SHA256SUMS.
+It extracts the ZIP and verifies byte equality, signature and architecture.
+It does not install, tag, upload or publish. Read INSTALL.md for the explicit
+security and runtime limitations of an unnotarized download.

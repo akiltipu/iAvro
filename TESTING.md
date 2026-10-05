@@ -2,7 +2,8 @@
 
 ## Evidence record — 2026-10-05
 
-Base commit: `107a73283ac34a33faf7f6799c2e9dbfa97e6643`, branch
+The following is the Phase 3 record before PR publication. Base commit:
+`107a73283ac34a33faf7f6799c2e9dbfa97e6643`, branch
 `feat/macos-27-apple-silicon`, with uncommitted arm64/controller fixes and the
 checks/docs in this change. This is not a tagged release.
 
@@ -43,6 +44,31 @@ and Release. All 69 source/documentation files matched the primary checkout;
 the local user guide and prior DerivedData were excluded. No commit was made.
 The later entitlement-display command adjustment was verified separately on
 both built artifacts; no product source changed after these builds.
+
+## Experimental release changes — 2026-10-06
+
+The fork's release candidate adds metadata version 1.0.0/build 10001,
+hardened runtime and suppression of injected debugging entitlements in
+Release. A valid ad-hoc signature shows the runtime flag and no
+`com.apple.security.get-task-allow`. No Developer ID signing identity is
+available; notarization is NOT PERFORMED.
+The read-only local `spctl --assess --type execute --verbose=4` check returned
+exit 3, rejected. No protection was disabled to change that result. This is
+recorded separately from valid code-signature integrity.
+
+The owner authorized an independent replacement of the distance routine
+whose original redistribution terms could not be verified. The replacement
+passes 400 captured original distance pairs, nil input and eight real
+dictionary candidate-order comparisons, alongside all earlier checks.
+The full Release build passes with 44 existing warning lines: the two
+narrowing warnings from the replaced routine are gone. There are no new
+test-source compiler warnings.
+
+The prior Debug manual confirmation predates these release-only protections
+and the independently tested routine replacement. Interactive testing of the
+exact final Release package, clean-account installation and Gatekeeper's
+per-app approval path remain NOT TESTED. Do not present the earlier Debug
+typing confirmation as a test of the downloadable Release artifact.
 
 ## Manual result and repeatable matrix
 
@@ -160,6 +186,6 @@ machine-specific backups are not repository artifacts.
   Logs can contain typed text. Keep them private; redact before sharing. Mark
   inaccessible logs and tests that were not performed explicitly.
 
-Unresolved metadata includes the inherited placeholder `CFBundleName`, version
-1.0 and the bundle-ID build-setting warning. These did not block the tested
-typing path; review versioning/metadata deliberately before distribution.
+The experimental release corrects the inherited bundle-name placeholder and
+version metadata. The existing bundle-ID/build-setting warning remains; it
+did not block compilation or the earlier tested typing path.

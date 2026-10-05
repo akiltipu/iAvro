@@ -1,42 +1,47 @@
 # Source, data and distribution provenance
 
-Inventory of the checkout at upstream commit
-`107a73283ac34a33faf7f6799c2e9dbfa97e6643`, reviewed 2026-10-05. No inherited
-license notice was removed and no new blanket license is assigned here.
+Base: upstream `107a73283ac34a33faf7f6799c2e9dbfa97e6643`. Updated 2026-10-06
+for the experimental community package. Original attribution and notices are
+preserved. No license is inferred from public GitHub visibility.
 
-There is no top-level LICENSE/COPYING file in that revision. However,
-`Credits.rtfd/TXT.rtf` explicitly says "Avro Keyboard for Mac is licensed under
-MPL 1.1" and contains third-party notices. This is positive licensing evidence;
-the absence of a top-level license must not be described as absence of all
-license information. Public GitHub visibility is not used as permission.
+The original `Credits.rtfd/TXT.rtf` expressly states that Avro Keyboard for
+Mac is licensed under MPL 1.1. The application-level declaration is the
+license evidence used for the original app and its bundled original data and
+resources; no separate per-resource grant has been located. Third-party
+components with identified terms are treated separately below. The package
+includes full license copies, modification history and matching source.
 
-| Material | Evidence in this checkout | Remaining distribution work |
-| --- | --- | --- |
-| App, parser and other OmicronLab Objective-C sources | Headers credit Rifat Nabi/OmicronLab, ©2012, all rights reserved; Credits names MPL 1.1 | Confirm scope for inherited files and supply applicable license/source notices for a modified binary |
-| `data.json`, `regex.json`, `database.db3`, `autodict.dct` | Original resources; Credits attributes Data & Dictionary to Sumaiya Nazmun and Mehdi Hasan Khan | No per-file license statement found; confirm redistribution scope for rules, dictionary and autocorrect data |
-| `avro.icns`, `Icons/*.png`, `Credits.rtfd` images and nib artwork | Credits attributes graphics to Tanbin Islam Siyam and M. M. Rifat-Un-Nabi; lists Dortmund Icon Set by PC.DE | Map individual assets to authors; Credits only says "CC 3.0" for Dortmund, without a complete variant/license identification |
-| `English.lproj` nibs, strings and `preferences.plist` | Inherited app resources | Confirm coverage under the application license; preserve attribution and packaged credits |
-| `RegexKitLite.h/.m` | Full BSD-style three-clause terms in source, ©2008–2010 John Engelhart; Credits also reproduces terms | Preserve source/binary notices and reconcile source/credits year ranges when preparing notices |
-| `FMDatabase*`, `FMResultSet*` | Credits reproduces MIT terms, ©2008 Flying Meat Inc.; attributes FMDB to August "Gus" Mueller | Retain full notice and identify exact vendored revision if needed; no separate package manifest identifies it |
-| `NSString+Levenshtein.h/.m` | ©2009 Stefano Pigozzi, all rights reserved; attribution in Credits | No explicit permission text located for this category; clarify applicable terms |
-| System Cocoa/Foundation/InputMethodKit, ICU, SQLite, libobjc/libSystem | Linked from the selected Apple SDK/system; no copied binary libraries | Record system linkage; do not package developer-machine copies |
-| New regression fixtures | Output captured from unmodified upstream parser/rules; see `tests/README.md` | Preserve provenance; snapshots are not a newly licensed replacement dataset |
+| Material | Evidence and packaging treatment |
+| --- | --- |
+| OmicronLab app/controller/parser sources | Original headers credit Rifat Nabi/OmicronLab, copyright 2012. Original Credits expressly declares MPL 1.1; preserve notices and provide corresponding modified source. |
+| data.json, regex.json, database.db3, autodict.dct | Unchanged original application resources. Credits names Sumaiya Nazmun and Mehdi Hasan Khan for Data & Dictionary. Included under the original application-level MPL declaration; no independent per-file license statement was found. |
+| avro.icns, nibs, strings, preferences and credit artwork | Unchanged original app resources. Graphics credit: Tanbin Islam Siyam and M. M. Rifat-Un-Nabi. Preserve existing artwork/attribution; no separate grant for every individual image has been located. Trademark ownership is not transferred or asserted. |
+| Icons/AutoCorrect.png, Credits.png, General.png | Commit f146a19637558df7235f17f320c8b7112fbe85e3 adds these with the Dortmund Icon Set credit to PC.DE. The original RTF's hyperlink explicitly points to https://creativecommons.org/licenses/by/3.0 even though its visible text only says CC 3.0. This corrects the earlier plain-text-only audit. Include CC BY 3.0 and attribution; images unchanged. |
+| RegexKitLite.h/.m | Full BSD-style three-clause notice in source, copyright 2008–2010 John Engelhart. Preserve it and the earlier year range in original Credits. |
+| FMDatabase*, FMResultSet* | Original Credits reproduces MIT terms, copyright 2008 Flying Meat Inc., and attributes FMDB to August “Gus” Mueller. Preserve full notice. Exact vendored package version remains unidentified. |
+| Former NSString+Levenshtein implementation | Original Credits links pigoz/imal; source credits Stefano Pigozzi, copyright 2009. That repository and the copied files provide no license we could verify. No grant from Pigozzi is claimed. The user authorized an independent replacement; the original implementation is absent from the release build and source archive. |
+| Replacement distance routine and community changes | Copyright 2026 AkilTipu, MPL 1.1; see MODIFICATIONS.md. API, UTF-16 distance and ordinary candidate ordering verified against captured original results. |
+| Cocoa/Foundation/InputMethodKit, ICU, SQLite, libobjc/libSystem | Apple SDK/system linkage; no copied system libraries in the package. |
+| Regression fixtures | Outputs captured from original source before changes, with source hashes in tests/README.md; compatibility snapshots rather than a new linguistic specification. |
 
-Credits can be inspected without editing it:
+## License copies
 
-```sh
-textutil -convert txt -stdout Credits.rtfd/TXT.rtf
-```
+- `LICENSES/MPL-1.1.txt`: Mozilla's full text linked by its official MPL 1.1 page,
+  https://www.mozilla.org/media/MPL/1.1/index.0c5913925d40.txt.
+- `LICENSES/CC-BY-3.0.txt`: official Creative Commons legal text, retrieved from
+  https://github.com/creativecommons/cc-legal-tools-data/blob/main/docs/licenses/by/3.0/legalcode.txt
+  when the direct legalcode URL returned HTTP 403 to the command-line client.
+- `LICENSES/RegexKitLite-BSD.txt`: verbatim notice from the existing header.
+- `LICENSES/FMDB-MIT.txt`: verbatim notice from the existing Credits document.
 
-The runtime/build work leaves original data, icons, credits and dependency
-sources unchanged. It does not resolve the open distribution questions above.
-Before packaging a public binary, obtain clarification for ambiguous inherited
-material, collect required complete notices/source materials, review neutral
-branding and record answers against exact files/revisions. Do not infer
-permission from an unanswered request, a public fork or upstream PR status.
+The records above distinguish explicit upstream license evidence from
+per-file provenance gaps. They do not establish an independent grant from
+every original contributor or claim ownership of third-party trademarks.
+The release retains the publisher's original application-level statement;
+it does not silently replace inherited terms with MIT or another license.
+No upstream author's permission was fabricated or inferred from the user's
+approval to publish this fork.
 
-Use the description: **Unofficial community-maintained iAvro fork by Akil; not
-an official OmicronLab release.** Developer ID signing, hardened-runtime
-evaluation, notarization, packaging and downloaded-artifact tests remain a
-separate release phase. Public distribution is pending these provenance and
-release checks; no request to an upstream author has been sent.
+Branding: **Unofficial community-maintained iAvro fork by Akil; not an official
+OmicronLab release.** Developer ID signing and notarization are not available
+for this experimental build. See NOTICES.md and INSTALL.md.
