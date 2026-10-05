@@ -5,6 +5,7 @@
 #import "RegexKitLite.h"
 #import "Database.h"
 #import "AutoCorrect.h"
+#import "NSString+Levenshtein.h"
 
 static void require(BOOL condition, NSString *message) {
     if (!condition) {
@@ -67,6 +68,40 @@ int main(void) {
         require([[autocorrect autoCorrectEntries] count] > 0, @"autocorrect dictionary loads");
         require([[autocorrect find:@"#-o"] isEqualToString:@"#-o"], @"existing emoticon remains unchanged");
         puts("PASS autocorrect dictionary and emoticon passthrough");
+
+        NSData *distanceData = [NSData dataWithContentsOfFile:[bundle pathForResource:@"distance" ofType:@"json"]];
+        require(distanceData != nil, @"distance fixtures exist");
+        NSDictionary *distanceFixtures = [NSJSONSerialization JSONObjectWithData:distanceData options:0 error:&error];
+        require([distanceFixtures isKindOfClass:[NSDictionary class]] && error == nil, @"distance fixtures decode");
+        NSArray *pairs = [distanceFixtures objectForKey:@"pairs"];
+        require([pairs count] > 0, @"distance fixtures contain pairs");
+        for (NSArray *pair in pairs) {
+            require([[pair objectAtIndex:0] computeLevenshteinDistanceWithString:[pair objectAtIndex:1]] ==
+                [[pair objectAtIndex:2] intValue], [NSString stringWithFormat:@"distance pair %@", pair]);
+        }
+        require([@"ami" computeLevenshteinDistanceWithString:nil] == -1, @"nil input retains empty-input result");
+        NSArray *rankings = [distanceFixtures objectForKey:@"rankings"];
+        require([rankings count] > 0, @"ranking fixtures exist");
+        for (NSDictionary *ranking in rankings) {
+            NSString *term = [ranking objectForKey:@"term"];
+            NSString *parsed = [[AvroParser sharedInstance] parse:term];
+            NSArray *candidates = [[Database sharedInstance] find:term];
+            require([parsed isEqualToString:[ranking objectForKey:@"parsed"]] &&
+                [candidates isEqualToArray:[ranking objectForKey:@"candidates"]], @"ranking inputs remain unchanged");
+            NSMutableArray *distances = [NSMutableArray array];
+            for (NSString *candidate in candidates) {
+                [distances addObject:@([parsed computeLevenshteinDistanceWithString:candidate])];
+            }
+            require([distances isEqualToArray:[ranking objectForKey:@"distances"]], @"candidate distances remain unchanged");
+            NSArray *ordered = [candidates sortedArrayUsingComparator:^NSComparisonResult(NSString *a, NSString *b) {
+                int left = [parsed computeLevenshteinDistanceWithString:a];
+                int right = [parsed computeLevenshteinDistanceWithString:b];
+                return left < right ? NSOrderedAscending : (left > right ? NSOrderedDescending : NSOrderedSame);
+            }];
+            require([ordered isEqualToArray:[ranking objectForKey:@"ordered"]], @"dictionary suggestion order remains unchanged");
+        }
+        printf("PASS %lu original distance pairs, nil input and %lu dictionary rankings\n",
+            (unsigned long)[pairs count], (unsigned long)[rankings count]);
     }
     return 0;
 }

@@ -114,11 +114,12 @@ TEST_CONTENTS="$OUT/EngineTests.app/Contents"
 mkdir -p "$TEST_CONTENTS/MacOS"
 /usr/bin/ditto "$APP/Contents/Resources" "$TEST_CONTENTS/Resources"
 cp "$ROOT/tests/transliteration.json" "$TEST_CONTENTS/Resources/transliteration.json"
+cp "$ROOT/tests/distance.json" "$TEST_CONTENTS/Resources/distance.json"
 /usr/bin/plutil -create xml1 "$TEST_CONTENTS/Info.plist"
 /usr/bin/plutil -insert CFBundleExecutable -string EngineTests "$TEST_CONTENTS/Info.plist"
 /usr/bin/plutil -insert CFBundleIdentifier -string org.iavro.tests.EngineTests "$TEST_CONTENTS/Info.plist"
 engine_objects=()
-for name in AvroParser RegexParser Database FMDatabase FMResultSet FMDatabasePool AutoCorrect RegexKitLite; do
+for name in AvroParser RegexParser Database FMDatabase FMResultSet FMDatabasePool AutoCorrect RegexKitLite NSString+Levenshtein; do
     engine_objects+=("$OBJECTS/$name.o")
 done
 run_logged engine-tests-build xcrun clang -arch arm64 -fno-objc-arc -I "$ROOT" \
@@ -127,4 +128,4 @@ run_logged engine-tests-build xcrun clang -arch arm64 -fno-objc-arc -I "$ROOT" \
 run_logged engine-tests "$TEST_CONTENTS/MacOS/EngineTests"
 cat "$OUT/engine-tests.log"
 printf 'PASS %s build and isolated checks. Logs: %s\n' "$CONFIGURATION" "$OUT"
-printf 'This is a local ad-hoc build, not a distributable or notarized release.\n'
+printf 'This is an ad-hoc build. Developer ID signing and notarization are not performed.\n'
